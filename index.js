@@ -11,6 +11,7 @@ const bodyParser = require("body-parser");
 const uuid = require("uuid");
 const { allowedNodeEnvironmentFlags } = require("process");
 const res = require("express/lib/response");
+const { redirect } = require("express/lib/response");
 
 app.use(bodyParser.json());
 
@@ -114,71 +115,31 @@ app.use((err, req, res, next) => {
 
 app.post("/users", (req, res) => {
   const newUser = req.body;
-
-  if (newUser.name) {
-    newUser.id = uuid.v4();
-    users.push(newUser);
-    res.status(201).json(newUser);
-  } else {
-    res.status(400).status("users need name");
-  }
+  res.send(+newUser.name + "Has been added");
 });
 //allow users to update username
 app.put("/users/:id", (req, res) => {
   const { id } = req.params;
   const updateUser = req.body;
   let user = users.find((user) => user.id == id);
-
-  if (user) {
-    user.name = updateUser.name;
-    res.status(200).json(user);
-  } else {
-    res.status(400).send("No such user");
-  }
+  res.status(200).json(user);
 });
 
 //allow users to add a list of movies to there favourites
 
-app.post("/users/:id/:movieTitle", (req, res) => {
-  const { id, movieTitle } = req.params;
-
-  let user = users.find((user) => user.id == id);
-
-  if (user) {
-    user.movie.push(movieTitle);
-    res.status(200).send("movie has been added!");
-  } else {
-    res.status(400).send("No such user");
-  }
+app.post("/movies", (req, res) => {
+  res.send("Success, movie has been added!");
 });
 
 //Allow users to remove a movie from there list
 
-app.delete("/users/:id/:movieTitle", (req, res) => {
-  const { id, movieTitle } = req.params;
-
-  let user = users.find((user) => user.id == id);
-
-  if (user) {
-    user.movie = user.movie.filter((title) => title !== movieTitle);
-    res.status(200).send("movie has been removed!");
-  } else {
-    res.status(400).send("No such user");
-  }
+app.delete("/movies/:id", (req, res) => {
+  res.send("Movie has been removed from list");
 });
 
 //Allow a user to deregiester
 app.delete("/users/:id", (req, res) => {
-  const { id } = req.params;
-
-  let user = users.find((user) => user.id == id);
-
-  if (user) {
-    users = users.filter((user) => user.id != id);
-    res.status(200).send("user has been deleted");
-  } else {
-    res.status(400).send("No such user");
-  }
+  res.send("User has been deleted");
 });
 
 // Returns list of ALL movies to user
@@ -190,12 +151,7 @@ app.get("/movies", (req, res) => {
 app.get("/movies/:title", (req, res) => {
   const { title } = req.params;
   const movie = favouritemovies.find((movie) => movie.Title === title);
-
-  if (movie) {
-    res.status(200).json(movie);
-  } else {
-    res.status(400).send("no such movie");
-  }
+  res.status(200).json(movie);
 });
 
 //Get movies by Genre name
@@ -204,12 +160,7 @@ app.get("/movies/genre/:genreName", (req, res) => {
   const genre = favouritemovies.find(
     (movie) => movie.Genre === genreName
   ).Genre;
-
-  if (genre) {
-    res.status(200).json(genre);
-  } else {
-    res.status(400).send("no such movie");
-  }
+  res.status(200).json(genre);
 });
 
 // Return data about director by name
@@ -219,12 +170,7 @@ app.get("/movies/directors/:directorName", (req, res) => {
   const director = favouritemovies.find(
     (movie) => movie.Director === directorName
   ).Director;
-
-  if (director) {
-    res.status(200).json(director);
-  } else {
-    res.status(400).send("no such director");
-  }
+  res.status(200).json(director);
 });
 
 app.listen(8080, () => console.log("listening on 8080"));
