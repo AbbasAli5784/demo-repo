@@ -233,8 +233,6 @@ app.get("/movies/directors/:directorName", (req, res) => {
   console.log(director);
 });
 
-app.get("/users", (req,res) => {
-  res.json(users);
-})
+
 
 app.listen(8080, () => console.log("listening on 8080"));

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>MyFlix API Documentation</title>
+  </head>
+  <body>
+    <h1>MyFlix API Documentation</h1>
+
+    <h2>Introduction</h2>
+    <p>
+      MyFlix is an API that provides information about movies and allows users
+      to register, update their username, add and remove movies from their
+      favorites list, and deregister. The API provides the following endpoints:
+    </p>
+
+    <h2>Endpoints</h2>
+
+    <h3>GET /movies</h3>
+    <p>Returns a list of all movies in the database.</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> /movies</li>
+      <li><strong>Method:</strong> GET</li>
+      <li><strong>Response Format:</strong> JSON</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+[  {    "Title": "SuperBad",    "DirectorInfo": {      "Name": "Greg Mottola",      "Bio": "asfasfhasjf",      "BirthYear": 1972,      "DeathYear": 2000    },    "Genre": "Comedy",    "Description": "Two high school seniors embark on a wild night of adventure in an attempt to buy alcohol for a party."  },  ...]      </pre
+        >
+      </li>
+    </ul>
+
+    <h3>GET /movies/:title</h3>
+    <p>Returns information about a single movie by its title.</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> /movies/:title</li>
+      <li><strong>Method:</strong> GET</li>
+      <li>
+        <strong>Query Parameters:</strong>
+        <ul>
+          <li>
+            <strong>title:</strong> the title of the movie to retrieve (string)
+          </li>
+        </ul>
+      </li>
+      <li><strong>Response Format:</strong> JSON</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+{
+  "Title": "SuperBad",
+  "DirectorInfo": {
+    "Name": "Greg Mottola",
+    "Bio": "asfasfhasjf",
+    "BirthYear": 1972,
+    "DeathYear": 2000
+  },
+  "Genre": "Comedy",
+  "Description": "Two high school seniors embark on a wild night of adventure in an attempt to buy alcohol for a party."
+}      </pre
+        >
+      </li>
+    </ul>
+
+    <h3>GET /movies/genre/:genreName</h3>
+    <p>Returns a list of all movies in a specific genre.</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> /movies/genre/:genreName</li>
+      <li><strong>Method:</strong> GET</li>
+      <li>
+        <strong>Query Parameters:</strong>
+        <ul>
+          <li>
+            <strong>genreName:</strong> the name of the genre to retrieve
+            (string)
+          </li>
+        </ul>
+      </li>
+      <li><strong>Response Format:</strong> JSON</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+[   {
+          "Title": "SuperBad",
+          "DirectorInfo": {
+              "Name": "Greg Mottola",
+              "Bio": "asfasfhasjf",
+              "BirthYear": 1972,
+              "DeathYear": 2000
+          },
+          "Genre": "Comedy",
+          "Description": "Two high school seniors embark on a wild night of adventure in an attempt to buy alcohol for a party."
+      }
+  ]</pre
+        >
+      </li>
+    </ul>
+    <h3>GET /movies/directors/:directorName</h3>
+    <p>Returns data about a movie based of director name</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> /movies/directors/:directorName</li>
+      <li><strong>Method:</strong> GET</li>
+      <li><strong>Response Format:</strong> JSON</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+          {
+            "Name": "Christopher Nolan",
+            "Bio": "asfasfhasjf",
+            "BirthYear": 1972,
+            "DeathYear": 2000
+        }
+        </pre>
+      </li>
+    </ul>
+    <h3>POST /Users</h3>
+    <p>allows a new user to regiester</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> /users</li>
+      <li><strong>Method:</strong> POST</li>
+      <li><strong>Response Format:</strong> JSON</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+          {
+            "name": "John",
+            "movie": [],
+            "id": "4d00cf55-ee4d-400a-9b43-3c30131ffac6"
+        }      </pre
+        >
+      </li>
+    </ul>
+    <h3>POST movies/:id/:movieTitle</h3>
+    <p>allow users to add a list of movies to there favourites</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> movies/:id/:movieTitle</li>
+      <li><strong>Method:</strong> POST</li>
+      <li><strong>Response Format:</strong> Plain Text</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+          "movie has been added to user!"
+        </pre>
+      </li>
+    </ul>
+
+    <h3>PUT /users/:id</h3>
+    <p>allow users to add a list of movies to there favourites</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> /users/:id</li>
+      <li><strong>Method:</strong> PUT</li>
+      <li><strong>Response Format:</strong> JSON</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+          {
+            "id": 1,
+            "name": "Katie",
+            "movie": []
+        }
+        </pre>
+      </li>
+    </ul>
+    <h3>DELETE //movies/:id/:movieTitle</h3>
+    <p>Allow users to remove a movie from there list</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> /movies/:id/:movieTitle</li>
+      <li><strong>Method:</strong> DELETE</li>
+      <li><strong>Response Format:</strong> Plain Text</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+          Movie has been removed from list
+        </pre>
+      </li>
+    </ul>
+    <h3>DELETE /users/:id</h3>
+    <p>Allow users to deregister</p>
+    <ul>
+      <li><strong>Endpoint URL:</strong> /users/:id</li>
+      <li><strong>Method:</strong> DELETE</li>
+      <li><strong>Response Format:</strong> Plain Text</li>
+      <li>
+        <strong>Response Body Example:</strong>
+        <pre>
+          User has been deleted
+        </pre>
+      </li>
+    </ul>
+  </body>
+</html>
