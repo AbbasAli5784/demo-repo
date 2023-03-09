@@ -16,6 +16,9 @@ mongoose.connect("mongodb://localhost:27017/MyFlixDB", {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+let auth = require('./auth')(app);
+const passport = require('passport');
+require('./passport');
 
 //Allows a new user to regiester
 app.post("/users", (req, res) => {
@@ -144,7 +147,7 @@ app.put("/users/:Username/movies/:MovieID", (req, res) => {
 });
 
 // Returns list of ALL movies to user
-app.get("/movies", (req, res) => {
+app.get("/movies", passport.authenticate('jwt', {session: false}), (req, res) => {
   Movies.find().then((movies) => {
     res.status(201).json(movies);
   });
