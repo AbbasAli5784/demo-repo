@@ -16,37 +16,57 @@ mongoose.connect("mongodb://localhost:27017/MyFlixDB", {
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-let auth = require('./auth')(app);
-const passport = require('passport');
-require('./passport');
+const { check, validationResult } = require("express-validator");
+const cors = require("cors");
+app.use(cors());
+let auth = require("./auth")(app);
+const passport = require("passport");
+require("./passport");
 
 //Allows a new user to regiester
-app.post("/users", (req, res) => {
-  Users.findOne({ Username: req.body.Username })
-    .then((user) => {
-      if (user) {
-        return res.status(400).send(req.body.Username + "already exists");
-      } else {
-        Users.create({
-          Username: req.body.Username,
-          Password: req.body.Password,
-          Email: req.body.Email,
-          Birthday: req.body.Birthday,
-        })
-          .then((user) => {
-            res.status(201).json(user);
+app.post(
+  "/users",
+  [
+    check("Username", "username is required").isLength({ min: 5 }),
+    check(
+      "Username",
+      "Username contains non alphanumeric characters - not allowed."
+    ).isAlphanumeric(),
+    check("Password", "Password is required").not().isEmpty(),
+    check("Email", "Email does not appear to be valid").isEmail(),
+  ],
+  (req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    Users.findOne({ Username: req.body.Username })
+      .then((user) => {
+        if (user) {
+          return res.status(400).send(req.body.Username + "already exists");
+        } else {
+          Users.create({
+            Username: req.body.Username,
+            Password: req.body.Password,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday,
           })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send("Error: " + error);
-          });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+            .then((user) => {
+              res.status(201).json(user);
+            })
+            .catch((error) => {
+              console.error(error);
+              res.status(500).send("Error: " + error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
 //Returns a list of all users
 app.get("/users", (req, res) => {
   Users.find()
@@ -113,7 +133,7 @@ app.post("/users/:Username/movies/:MovieID", (req, res) => {
     });
 });
 
-//Allow a user to deregiester 
+//Allow a user to deregiester
 app.delete("/users/:Username", (req, res) => {
   Users.findOneAndRemove({ Username: req.params.Username })
     .then((user) => {
@@ -147,11 +167,15 @@ app.put("/users/:Username/movies/:MovieID", (req, res) => {
 });
 
 // Returns list of ALL movies to user
-app.get("/movies", passport.authenticate('jwt', {session: false}), (req, res) => {
-  Movies.find().then((movies) => {
-    res.status(201).json(movies);
-  });
-});
+app.get(
+  "/movies",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Movies.find().then((movies) => {
+      res.status(201).json(movies);
+    });
+  }
+);
 
 //Returns data about a single movie by Title to the user
 app.get("/movies/:title", (req, res) => {
@@ -198,5 +222,7 @@ app.get("/genres", (req, res) => {
       res.status(500).send("Error:" + err);
     });
 });
-
-app.listen(8080, () => console.log("listening on 8080"));
+const port = process.env.PORT || 8080;
+app.listen(port, "0.0.0.0", () => {
+  console.log("Listening on Port" + port);
+});

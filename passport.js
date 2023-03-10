@@ -18,6 +18,10 @@ let Users = Models.User,
         console.log('incorrect username');
         return callback(null, false, {message: 'Incorrect username or password.'});
       }
+      if(!user.validatePassword(password)) {
+        console.log('incorrect password!');
+        return callback(null, false, {message: 'Incorrect password.'})
+      }
   
       console.log('finished');
       return callback(null, user);
@@ -25,33 +29,6 @@ let Users = Models.User,
       console.error(err);
     })
   }));
-
-// passport.use(
-//   new LocalStrategy(
-//     {
-//       usernameField: "Username",
-//       passwordField: "Password",
-//     },
-//     (username, password, callback) => {
-//       console.log(username + "  " + password);
-//       Users.findOne({ Username: username })
-//         .then((user) => {
-//           if (!user) {
-//             return callback(false, {
-//               message: "Incorrect username or password.",
-//               user: username,
-//               pass: password,
-//             });
-//           }
-//           console.log(user)
-//           return callback(true, user);
-//         })
-//         .catch((err) => {
-//           console.log(err);
-//         });
-//     }
-//   )
-// );
 
 passport.use(
   new JWTStrategy(
