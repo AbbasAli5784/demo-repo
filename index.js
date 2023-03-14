@@ -33,6 +33,10 @@ const passport = require("passport");
 require("./passport");
 
 //Allows a new user to regiester
+app.get("/", (req, res) => {
+  res.send("Welcome to MyFlix");
+});
+
 app.post(
   "/users",
   [
