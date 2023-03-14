@@ -182,7 +182,7 @@ app.put("/users/:Username/movies/:MovieID", (req, res) => {
 // Returns list of ALL movies to user
 app.get(
   "/movies",
-  passport.authenticate("jwt", { session: false }),
+  //passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Movies.find().then((movies) => {
       res.status(201).json(movies);
