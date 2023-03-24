@@ -180,15 +180,11 @@ app.put("/users/:Username/movies/:MovieID", (req, res) => {
 });
 
 // Returns list of ALL movies to user
-app.get(
-  "/movies",
-  passport.authenticate("jwt", { session: false }),
-  (req, res) => {
-    Movies.find().then((movies) => {
-      res.status(201).json(movies);
-    });
-  }
-);
+app.get("/movies", (req, res) => {
+  Movies.find().then((movies) => {
+    res.status(201).json(movies);
+  });
+});
 
 //Returns data about a single movie by Title to the user
 app.get("/movies/:title", (req, res) => {
