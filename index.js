@@ -14,14 +14,14 @@ const Directors = Models.Director;
 //   useUnifiedTopology: true,
 // });
 //"mongodb+srv://MyFlixDBAdmin:<password>@cluster0.hwbqwl3.mongodb.net/?retryWrites=true&w=majority"
-mongoose.connect(
-  process.env.CONNECTION_URI ||
-    "mongodb+srv://MyFlixDBAdmin:haVS92u6JJYLonV9@cluster0.hwbqwl3.mongodb.net/?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+// const mong = mongoose.connect(
+//   process.env.CONNECTION_URI ||
+//     "mongodb+srv://MyFlixDBAdmin:haVS92u6JJYLonV9@cluster0.hwbqwl3.mongodb.net/?retryWrites=true&w=majority",
+//   {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//   }
+// );
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
