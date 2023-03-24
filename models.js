@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
- mongoose.connect(
+const bcrypt = require("bcrypt");
+mongoose.connect(
   process.env.CONNECTION_URI ||
     "mongodb+srv://MyFlixDBAdmin:haVS92u6JJYLonV9@cluster0.hwbqwl3.mongodb.net/?retryWrites=true&w=majority",
   {
@@ -32,9 +32,9 @@ userSchema.statics.hashPassword = (password) => {
   return bcrypt.hashSync(password, 10);
 };
 
-userSchema.methods.validatePassword = function(password) {
-  return bcrypt.compareSync (password, this.Password)
-}
+userSchema.methods.validatePassword = function (password) {
+  return bcrypt.compareSync(password, this.Password);
+};
 
 let genreSchema = mongoose.Schema({
   Title: { type: String, required: true },
@@ -48,10 +48,10 @@ let directorSchema = mongoose.Schema({
   Death: { type: mongoose.Schema.Types.Mixed },
 });
 
-let Movie = mongoose.model("Movie", movieSchema);
-let User = mongoose.model("User", userSchema);
-let Genre = mongoose.model("Genre", genreSchema);
-let Director = mongoose.model("Director", directorSchema);
+let Movie = mongoose.model("movie", movieSchema);
+let User = mongoose.model("user", userSchema);
+let Genre = mongoose.model("genre", genreSchema);
+let Director = mongoose.model("director", directorSchema);
 
 module.exports.Movie = Movie;
 module.exports.User = User;
