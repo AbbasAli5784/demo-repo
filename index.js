@@ -9,14 +9,10 @@ const Movies = Models.Movie;
 const Users = Models.User;
 const Genres = Models.Genre;
 const Directors = Models.Director;
-mongoose.connect(
-  process.env.CONNECTION_URI ||
-    "mongodb+srv://MyFlixDBAdmin:haVS92u6JJYLonV9@cluster0.hwbqwl3.mongodb.net/myFlixDB?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+mongoose.connect(process.env.CONNECTION_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 // mongoose.connect("mongodb://localhost:27017/MyFlixDB", {
 //   useNewUrlParser: true,
 //   useUnifiedTopology: true,
