@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-mongoose.connect(
-  process.env.CONNECTION_URI ||
-    "mongodb+srv://MyFlixDBAdmin:haVS92u6JJYLonV9@cluster0.hwbqwl3.mongodb.net/?retryWrites=true&w=majority",
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  }
-);
+
 
 let movieSchema = mongoose.Schema({
   Title: { type: String, required: true },
