@@ -191,16 +191,20 @@ app.get("/movies", (req, res) => {
 });
 
 //Returns data about a single movie by Title to the user
-app.get("/movies/:title", (req, res) => {
-  Movies.findOne({ Name: req.params.title })
-    .then((movie) => {
-      res.json(movie);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Error:" + err);
-    });
-});
+app.get(
+  "/movies/:title",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Movies.findOne({ Name: req.params.title })
+      .then((movie) => {
+        res.json(movie);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error:" + err);
+      });
+  }
+);
 
 //Get movies by Genre name
 app.get("/movies/genre/:genreName", (req, res) => {
