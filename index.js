@@ -94,18 +94,19 @@ app.get("/users", (req, res) => {
       console.error(err);
       res.status(500).send("Error:" + err);
     });
-  //Get a user by username
-  app.get("/users/:Username", (req, res) => {
-    Users.findOne({ Username: req.params.Username })
-      .then((user) => {
-        res.json(user);
-      })
-      .catch((err) => {
-        console.error(err);
-        res.status(500).send("Error:" + err);
-      });
-  });
 });
+//Get a user by username
+app.get("/users/:Username", (req, res) => {
+  Users.findOne({ Username: req.params.Username })
+    .then((user) => {
+      res.json(user);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error:" + err);
+    });
+});
+
 //update a user's info, by username
 
 app.put("/users/:id", (req, res) => {
@@ -184,11 +185,15 @@ app.put("/users/:Username/movies/:MovieID", (req, res) => {
 });
 
 // Returns list of ALL movies to user
-app.get("/movies", passport.authenticate('jwt', {session:false}), (req, res) => {
-  Movies.find().then((movies) => {
-    res.status(201).json(movies);
-  });
-});
+app.get(
+  "/movies",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Movies.find().then((movies) => {
+      res.status(201).json(movies);
+    });
+  }
+);
 
 //Returns data about a single movie by Title to the user
 app.get(
@@ -239,6 +244,46 @@ app.get("/genres", (req, res) => {
       res.status(500).send("Error:" + err);
     });
 });
+
+//Verify passowrd endpoint
+app.post(
+  "/users/verifyPassword/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findById(req.params.id)
+      .then((user) => {
+        if (user.validatePassword(req.body.password)) {
+          res.status(200).send("Password verified");
+        } else {
+          res.status(400).send("Incorrect password");
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error:", err);
+      });
+  }
+);
+//Update password endpoint
+app.put(
+  "/users/updatePassword/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const hashedPassword = Users.hashPassword(req.body.password);
+    Users.findByIdAndUpdate(
+      req.params.id,
+      { $set: { Password: hashedPassword } },
+      { new: true }
+    )
+      .then((updatedUser) => {
+        res.status(200).json(updatedUser);
+      })
+      .catch((Err) => {
+        res.status(500).send("Error", Err);
+      });
+  }
+);
+
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
   console.log("Listening on Port" + port);
