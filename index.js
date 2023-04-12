@@ -31,7 +31,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 const { check, validationResult } = require("express-validator");
 const cors = require("cors");
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:1234",
+  optionsSuccessStatus: 200,
+  credentials: true,
+};
+app.use(cors(corsOptions));
 let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
@@ -125,8 +130,8 @@ app.put(
       return res.status(422).json({ errors: errors.array() });
     }
     let hashedPassword = req.body.Password
-    ? Users.hashPassword(req.body.Password)
-    : undefined;
+      ? Users.hashPassword(req.body.Password)
+      : undefined;
 
     console.log("Updating user:", req.params.id);
     console.log("New user data:", req.body);
