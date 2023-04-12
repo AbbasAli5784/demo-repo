@@ -109,31 +109,50 @@ app.get("/users/:Username", (req, res) => {
 
 //update a user's info, by username
 
-app.put("/users/:id", (req, res) => {
-  console.log("Updating user:", req.params.id);
-  console.log("New user data:", req.body);
+app.put(
+  "/users/:Username",
+  [
+    check("Username", "username is required").isLength({ min: 5 }),
+    check(
+      "Username",
+      "Username contains non alphanumeric characters - not allowed"
+    ).isAlphanumeric(),
+    check("Email", "Email does not appear to be valid").isEmail(),
+  ],
+  (req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+    }
+    let hashedPassword = req.body.Password
+    ? Users.hashPassword(req.body.Password)
+    : undefined;
 
-  Users.findByIdAndUpdate(
-    req.params.id,
-    {
-      $set: {
-        Username: req.body.Username,
-        Password: req.body.Password,
-        Email: req.body.Email,
-        Birthday: req.body.Birthday,
+    console.log("Updating user:", req.params.id);
+    console.log("New user data:", req.body);
+
+    Users.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          Username: req.body.Username,
+          Password: hashedPassword,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday,
+        },
       },
-    },
-    { new: true }
-  )
-    .then((updatedUser) => {
-      console.log(updatedUser);
-      res.json(updatedUser);
-    })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send("Error:" + err);
-    });
-});
+      { new: true }
+    )
+      .then((updatedUser) => {
+        console.log(updatedUser);
+        res.json(updatedUser);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error:" + err);
+      });
+  }
+);
 
 //Add a movie to a user's list of favorites
 app.post("/users/:Username/movies/:MovieID", (req, res) => {
@@ -280,6 +299,22 @@ app.put(
       })
       .catch((Err) => {
         res.status(500).send("Error", Err);
+      });
+  }
+);
+
+app.get(
+  "/users/:Username/favoritemovies",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOne({ Username: req.params.Username })
+      .populate("FavoriteMovies")
+      .then((user) => {
+        res.json(user.FavoriteMovies);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error: ", err);
       });
   }
 );
