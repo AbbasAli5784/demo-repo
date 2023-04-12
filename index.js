@@ -33,7 +33,8 @@ const { check, validationResult } = require("express-validator");
 const cors = require("cors");
 const corsOptions = {
   origin: "http://localhost:1234",
-  optionsSuccessStatus: 200,
+  methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
 app.use(cors(corsOptions));
