@@ -29,16 +29,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (
-      [
-        "http://localhost:1234",
-        "https://morning-badlands-99587.herokuapp.com",
-      ].indexOf(origin) !== -1
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
+    callback(null, true);
   },
   methods: ["GET", "PUT", "POST", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
