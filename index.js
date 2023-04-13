@@ -36,7 +36,6 @@ const corsOptions = {
       ].indexOf(origin) !== -1
     ) {
       callback(null, true);
-      
     } else {
       callback(new Error("Not allowed by CORS"));
     }
@@ -45,15 +44,7 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 };
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:1234");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-  );
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  next();
-});
+
 const cors = require("cors");
 app.use(cors(corsOptions));
 
