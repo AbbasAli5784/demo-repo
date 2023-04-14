@@ -197,6 +197,24 @@ app.delete("/users/:Username", (req, res) => {
     });
 });
 
+app.delete(
+  "/users/:Username/movies/:MovieID",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { Username: req.params.Username },
+      { $pull: { FavoriteMovies: req.params.MovieID } },
+      { new: true }
+    )
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((err) => {
+        console.error(err);
+        res.status(500).send("Error:", err);
+      });
+  }
+);
 //Allow users to remove a movie from there list
 
 app.put("/users/:Username/movies/:MovieID", (req, res) => {
