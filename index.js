@@ -342,7 +342,7 @@ app.get(
   }
 );
 
-app.get("/movies/:MovieID", (req, res) => {
+app.get("/movies/:MovieID/favoriteMovies", (req, res) => {
   console.log("Fetching movie with ID:", req.params.MovieID); // Log the movie ID being requested
 
   Movies.findById(req.params.MovieID)
