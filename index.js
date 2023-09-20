@@ -148,19 +148,31 @@ app.put(
   }
 );
 
-//Add a movie to a user's list of favorites
+// Add a movie object to a user's list of favorites
 app.post("/users/:Username/movies/:MovieID", (req, res) => {
-  Users.findOneAndUpdate(
-    { Username: req.params.Username },
-    { $push: { FavoriteMovies: req.params.MovieID } },
-    { new: true }
-  )
-    .then((updateUser) => {
-      res.json(updateUser);
+  // First, fetch the movie object using the provided MovieID
+  Movies.findById(req.params.MovieID)
+    .then((movie) => {
+      if (!movie) {
+        return res.status(404).send("Movie not found");
+      }
+      // Update the user's FavoriteMovies array by pushing the fetched movie object
+      Users.findOneAndUpdate(
+        { Username: req.params.Username },
+        { $push: { FavoriteMovies: movie } }, // Push the entire movie object
+        { new: true }
+      )
+        .then((updatedUser) => {
+          res.json(updatedUser);
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send("Error updating user's favorite movies: " + err);
+        });
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error: " + err);
+      res.status(500).send("Error fetching movie: " + err);
     });
 });
 
@@ -321,7 +333,7 @@ app.get(
   (req, res) => {
     Users.findOne({ Username: req.params.Username })
       .then((user) => {
-        res.json(user);
+        res.json(user.FavoriteMovies);
       })
       .catch((err) => {
         console.error(err);
