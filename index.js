@@ -331,14 +331,18 @@ app.get(
 );
 
 app.get("/movies/:movieId", (req, res) => {
-  Movies.findById(req.params.movieId);
-  console
-    .log("id:", req.params.id)
+  console.log("Fetching movie with ID:", req.params.movieId); // Log the movie ID being requested
+
+  Movies.findById(req.params.movieId)
     .then((movie) => {
+      if (!movie) {
+        console.log("No movie found with ID:", req.params.movieId); // Log if no movie is found
+        return res.status(404).send("Movie not found");
+      }
       res.json(movie);
     })
     .catch((err) => {
-      console.error(err);
+      console.error("Error fetching movie:", err);
       res.status(500).send("Error fetching movie: ", err);
     });
 });
