@@ -343,12 +343,12 @@ app.get(
 );
 
 app.get("/movies/:MovieID", (req, res) => {
-  console.log("Fetching movie with ID:", req.params.movieId); // Log the movie ID being requested
+  console.log("Fetching movie with ID:", req.params.MovieID); // Log the movie ID being requested
 
   Movies.findById(req.params.MovieID)
     .then((movie) => {
       if (!movie) {
-        console.log("No movie found with ID:", req.params.movieId); // Log if no movie is found
+        console.log("No movie found with ID:", req.params.MovieID); // Log if no movie is found
         return res.status(404).send("Movie not found");
       }
       res.json(movie);
