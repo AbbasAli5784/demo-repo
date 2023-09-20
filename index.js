@@ -331,7 +331,9 @@ app.get(
 );
 
 app.get("/movies/:movieId", (req, res) => {
-  Movies.findById(req.params.movieId)
+  Movies.findById(req.params.movieId);
+  console
+    .log("id:", req.params.id)
     .then((movie) => {
       res.json(movie);
     })
