@@ -342,10 +342,10 @@ app.get(
   }
 );
 
-app.get("/movies/:movieId", (req, res) => {
+app.get("/movies/:MovieID", (req, res) => {
   console.log("Fetching movie with ID:", req.params.movieId); // Log the movie ID being requested
 
-  Movies.findById(req.params.movieId)
+  Movies.findById(req.params.MovieID)
     .then((movie) => {
       if (!movie) {
         console.log("No movie found with ID:", req.params.movieId); // Log if no movie is found
