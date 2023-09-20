@@ -13,19 +13,6 @@ mongoose.connect(process.env.CONNECTION_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-// mongoose.connect("mongodb://localhost:27017/MyFlixDB", {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-//"mongodb+srv://MyFlixDBAdmin:<password>@cluster0.hwbqwl3.mongodb.net/?retryWrites=true&w=majority"
-// const mong = mongoose.connect(
-//   process.env.CONNECTION_URI ||
-//     "mongodb+srv://MyFlixDBAdmin:haVS92u6JJYLonV9@cluster0.hwbqwl3.mongodb.net/?retryWrites=true&w=majority",
-//   {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true,
-//   }
-// );
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -342,6 +329,17 @@ app.get(
       });
   }
 );
+
+app.get("/movies/:movieId", (req, res) => {
+  Movies.findById(req.params.movieId)
+    .then((movie) => {
+      res.json(movie);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send("Error fetching movie: ", err);
+    });
+});
 
 const port = process.env.PORT || 8080;
 app.listen(port, "0.0.0.0", () => {
